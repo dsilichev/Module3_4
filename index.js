@@ -1,47 +1,33 @@
-const yargs = require("yargs");
+const http = require("http");
 const chalk = require("chalk");
-const { addNote, printNotes, removeNote } = require("./notes-controller");
+const fs = require("fs/promises");
+const path = require("path");
+const { addNote } = require("./notes-controller");
 
-const pkg = require("./package.json");
+const port = 3000;
+const basePath = path.join(__dirname, "pages");
 
-yargs.version(pkg.version);
+const server = http.createServer(async (req, res) => {
+  if (req.method === "GET") {
+    const content = await fs.readFile(path.join(basePath, "index.html"));
 
-yargs.command({
-  command: "add",
-  describe: "Add new note to list",
-  builder: {
-    title: {
-      type: "string",
-      describe: "Note title",
-      demandOption: true,
-    },
-  },
-  handler({ title }) {
-    addNote(title);
-  },
+    res.writeHead(200, { "Content-Type": "text/html" });
+    res.end(content);
+  } else if (req.method === "POST") {
+    const body = [];
+    res.writeHead(200, { "Content-Type": "text/plain; charset=utf-8" });
+    req.on("data", (data) => {
+      body.push(Buffer.from(data));
+    });
+
+    req.on("end", () => {
+      const title = body.toString().split("=")[1].replaceAll("+", " ");
+      addNote(title);
+      res.end(`Title = ${title}`);
+    });
+  }
 });
 
-yargs.command({
-  command: "list",
-  describe: "Print all notes",
-  async handler() {
-    printNotes();
-  },
+server.listen(port, () => {
+  console.log(chalk.green(`Server has been started on port ${port}`));
 });
-
-yargs.command({
-  command: "remove",
-  describe: "Remove note by id",
-  builder: {
-    id: {
-      type: "string",
-      describe: "Remove note",
-      demandOption: true,
-    },
-  },
-  async handler({ id }) {
-    removeNote(id);
-  },
-});
-
-yargs.parse();
