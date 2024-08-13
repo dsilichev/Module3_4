@@ -1,0 +1,27 @@
+{
+  "name": "note-app",
+  "version": "1.0.0",
+  "description": "Simple NodeJS App",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dsilichev/Module3_2_practice.git"
+  },
+  "keywords": [
+    "node",
+    "javascript"
+  ],
+  "author": "Dmitriy Ilichev <dsilichev@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dsilichev/Module3_2_practice/issues"
+  },
+  "homepage": "https://github.com/dsilichev/Module3_2_practice#readme",
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "yargs": "^17.7.2"
+  }
+}
