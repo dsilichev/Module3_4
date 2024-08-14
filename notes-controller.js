@@ -41,4 +41,4 @@ async function removeNote(id) {
   console.log(chalk.bgGreen.inverse(`Note id:${id} was removed`));
 }
 
-module.exports = { addNote, printNotes, removeNote };
+module.exports = { addNote, getNotes, printNotes, removeNote };
