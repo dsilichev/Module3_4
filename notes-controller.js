@@ -41,4 +41,18 @@ async function removeNote(id) {
   console.log(chalk.bgGreen.inverse(`Note id:${id} was removed`));
 }
 
-module.exports = { addNote, getNotes, printNotes, removeNote };
+async function modifyNote(id, title) {
+  const notes = await getNotes();
+
+  const newNotes = notes.map((note) => {
+    if (note.id === id) {
+      note.title = title;
+    }
+    return note;
+  });
+
+  await fs.writeFile("./db.json", JSON.stringify(newNotes));
+  console.log(chalk.bgYellow.inverse(`Note id:${id} was modified`));
+}
+
+module.exports = { addNote, getNotes, modifyNote, printNotes, removeNote };

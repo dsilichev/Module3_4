@@ -40,7 +40,10 @@
             class="list-group-item d-flex justify-content-between align-items-center"
           >
             <%= notes[i].title %>
-            <button class="btn btn-danger" data-type="remove" data-id="<%= notes[i].id %>">&times;</button>
+            <div class="button-group">
+              <button class="btn btn-primary" data-type="modify" data-id="<%= notes[i].id %>">Редактировать</button>
+              <button class="btn btn-danger" data-type="remove" data-id="<%= notes[i].id %>">&times;</button>
+            </div>
           </li>
           <% } %>
         </ul>
