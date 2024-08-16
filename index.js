@@ -10,6 +10,8 @@ const {
   removeNote,
 } = require("./notes-controller");
 
+const { addUser } = require("./users-controller");
+
 const port = 3000;
 
 const app = express();
@@ -24,6 +26,32 @@ app.use(
     extended: true,
   })
 );
+
+app.get("/register", async (req, res) => {
+  res.render("register", {
+    title: "Express App",
+    error: undefined,
+  });
+});
+
+app.post("/register", async (req, res) => {
+  try {
+    await addUser(req.body.email, req.body.password);
+    res.redirect("/login");
+  } catch (e) {
+    if (e.code === 11000) {
+      res.render("register", {
+        title: "Express App",
+        error: "Email is already registered",
+      });
+      return;
+    }
+    res.render("register", {
+      title: "Express App",
+      error: e.message,
+    });
+  }
+});
 
 app.get("/", async (req, res) => {
   res.render("index", {
@@ -77,7 +105,7 @@ app.put("/:id", async (req, res) => {
 
 mongoose
   .connect(
-    ""
+    "mongodb+srv://dsilichev:355381000@cluster0.svr1oda.mongodb.net/notes?retryWrites=true&w=majority&appName=Cluster0"
   )
   .then(() => {
     app.listen(port, () => {
