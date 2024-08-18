@@ -3,6 +3,7 @@ const chalk = require("chalk");
 const path = require("path");
 const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
+const auth = require('./middlewares/auth');
 
 
 const {
@@ -76,6 +77,8 @@ app.post("/register", async (req, res) => {
   }
 });
 
+app.use(auth);
+
 app.get("/", async (req, res) => {
   res.render("index", {
     title: "Express App",
@@ -87,7 +90,7 @@ app.get("/", async (req, res) => {
 
 app.post("/", async (req, res) => {
   try {
-    await addNote(req.body.title);
+    await addNote(req.body.title, req.user.email);
     res.render("index", {
       title: "Express App",
       notes: await getNotes(),
