@@ -43,6 +43,7 @@
           >
             <span><%= notes[i].title %></span>
             <span><%= notes[i].owner %></span>
+            <% if (notes[i].owner === userEmail) { %>
             <div class="button-group">
               <button
                 class="btn btn-primary"
@@ -59,6 +60,7 @@
                 &times;
               </button>
             </div>
+          <% } %>
           </li>
           <% } %>
         </ul>

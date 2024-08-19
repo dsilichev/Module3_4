@@ -3,8 +3,8 @@ const chalk = require("chalk");
 const path = require("path");
 const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
-const auth = require('./middlewares/auth');
-
+const auth = require("./middlewares/auth");
+const { KEY } = require("./key");
 
 const {
   addNote,
@@ -41,7 +41,7 @@ app.get("/login", async (req, res) => {
 app.post("/login", async (req, res) => {
   try {
     const token = await loginUser(req.body.email, req.body.password);
-    res.cookie('token', token);
+    res.cookie("token", token, { httpOnly: true });
     res.redirect("/");
   } catch (e) {
     res.render("login", {
@@ -77,12 +77,18 @@ app.post("/register", async (req, res) => {
   }
 });
 
+app.get("/logout", (req, res) => {
+  res.cookie("token", "", { httpOnly: true });
+  res.redirect("/login");
+});
+
 app.use(auth);
 
 app.get("/", async (req, res) => {
   res.render("index", {
     title: "Express App",
     notes: await getNotes(),
+    userEmail: req.user.email,
     created: false,
     error: false,
   });
@@ -94,6 +100,7 @@ app.post("/", async (req, res) => {
     res.render("index", {
       title: "Express App",
       notes: await getNotes(),
+      userEmail: req.user.email,
       created: true,
       error: false,
     });
@@ -102,6 +109,7 @@ app.post("/", async (req, res) => {
     res.render("index", {
       title: "Express App",
       notes: await getNotes(),
+      userEmail: req.user.email,
       created: false,
       error: true,
     });
@@ -109,32 +117,52 @@ app.post("/", async (req, res) => {
 });
 
 app.delete("/:id", async (req, res) => {
-  await removeNote(req.params.id);
-  res.render("index", {
-    title: "Express App",
-    notes: await getNotes(),
-    created: false,
-    error: false,
-  });
+  try {
+    await removeNote(req.params.id, req.user.email);
+    res.render("index", {
+      title: "Express App",
+      notes: await getNotes(),
+      userEmail: req.user.email,
+      created: false,
+      error: false,
+    });
+  } catch (e) {
+    res.render("index", {
+      title: "Express App",
+      notes: await getNotes(),
+      userEmail: req.user.email,
+      created: false,
+      error: e.message,
+    });
+  }
 });
 
 app.put("/:id", async (req, res) => {
-  await modifyNote({ id: req.params.id, title: req.body.title });
-  console.log();
-  res.render("index", {
-    title: "Express App",
-    notes: await getNotes(),
-    created: false,
-    error: false,
-  });
+  try {
+    await modifyNote(
+      { id: req.params.id, title: req.body.title },
+      req.user.email
+    );
+    res.render("index", {
+      title: "Express App",
+      notes: await getNotes(),
+      userEmail: req.user.email,
+      created: false,
+      error: false,
+    });
+  } catch (e) {
+    res.render("index", {
+      title: "Express App",
+      notes: await getNotes(),
+      userEmail: req.user.email,
+      created: false,
+      error: e.message,
+    });
+  }
 });
 
-mongoose
-  .connect(
-    ""
-  )
-  .then(() => {
-    app.listen(port, () => {
-      console.log(chalk.green(`Server has been started on port ${port}`));
-    });
+mongoose.connect(KEY).then(() => {
+  app.listen(port, () => {
+    console.log(chalk.green(`Server has been started on port ${port}`));
   });
+});
