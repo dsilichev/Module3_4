@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const RequestShema = mongoose.Schema({
+const RequestSchema = mongoose.Schema({
   name: {
     type: String,
     required: true,
@@ -19,6 +19,6 @@ const RequestShema = mongoose.Schema({
   }
 });
 
-const Request = mongoose.model("Request", RequestShema);
+const Request = mongoose.model("Request", RequestSchema);
 
 module.exports = Request;
