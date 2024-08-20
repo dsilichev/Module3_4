@@ -1,5 +1,5 @@
 const chalk = require("chalk");
-const Note = require("./models/Note");
+const Note = require("./models/Request");
 
 async function addNote(title, owner) {
   await Note.create({ title, owner });
