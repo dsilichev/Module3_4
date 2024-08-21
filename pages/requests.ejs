@@ -27,14 +27,6 @@
 
     <div class="container">
       <h1><%= title %></h1>
-      <form action="/" method="post">
-        <div class="form-group mb-2">
-          <input type="text" class="form-control" name="title" />
-          <input type="tel" class="form-control" name="phone" />
-          <input type="text" class="form-control" name="description" />
-        </div>
-        <button class="btn btn-primary" type="submit">Отправить</button>
-      </form>
 
       <% if (notes.length) { %>
       <div class="card">

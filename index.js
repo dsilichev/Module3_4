@@ -7,11 +7,9 @@ const auth = require("./middlewares/auth");
 const { KEY } = require("./key");
 
 const {
-  addNote,
-  getNotes,
-  modifyNote,
-  removeNote,
-} = require("./notes-controller");
+  addRequest,
+  getRequests,
+} = require("./requests-controller");
 
 const { addUser, loginUser } = require("./users-controller");
 
@@ -84,10 +82,20 @@ app.get("/logout", (req, res) => {
 
 app.use(auth);
 
+app.get("/requests", async (req, res) => {
+  res.render("requests", {
+    title: "Express App",
+    notes: await getRequests(),
+    userEmail: req.user.email,
+    created: false,
+    error: false,
+  });
+});
+
 app.get("/", async (req, res) => {
   res.render("index", {
     title: "Express App",
-    notes: await getNotes(),
+    //notes: await getRequests(),
     userEmail: req.user.email,
     created: false,
     error: false,
@@ -96,11 +104,11 @@ app.get("/", async (req, res) => {
 
 app.post("/", async (req, res) => {
   try {
-    await addNote(req.body.title, req.user.email);
+    await addRequest(req.body.title, req.user.email);
     res.render("index", {
       title: "Express App",
-      notes: await getNotes(),
-      userEmail: req.user.email,
+      //notes: await getNotes(),
+      //userEmail: req.user.email,
       created: true,
       error: false,
     });
@@ -116,50 +124,50 @@ app.post("/", async (req, res) => {
   }
 });
 
-app.delete("/:id", async (req, res) => {
-  try {
-    await removeNote(req.params.id, req.user.email);
-    res.render("index", {
-      title: "Express App",
-      notes: await getNotes(),
-      userEmail: req.user.email,
-      created: false,
-      error: false,
-    });
-  } catch (e) {
-    res.render("index", {
-      title: "Express App",
-      notes: await getNotes(),
-      userEmail: req.user.email,
-      created: false,
-      error: e.message,
-    });
-  }
-});
+// app.delete("/:id", async (req, res) => {
+//   try {
+//     await removeNote(req.params.id, req.user.email);
+//     res.render("index", {
+//       title: "Express App",
+//       notes: await getNotes(),
+//       userEmail: req.user.email,
+//       created: false,
+//       error: false,
+//     });
+//   } catch (e) {
+//     res.render("index", {
+//       title: "Express App",
+//       notes: await getNotes(),
+//       userEmail: req.user.email,
+//       created: false,
+//       error: e.message,
+//     });
+//   }
+// });
 
-app.put("/:id", async (req, res) => {
-  try {
-    await modifyNote(
-      { id: req.params.id, title: req.body.title },
-      req.user.email
-    );
-    res.render("index", {
-      title: "Express App",
-      notes: await getNotes(),
-      userEmail: req.user.email,
-      created: false,
-      error: false,
-    });
-  } catch (e) {
-    res.render("index", {
-      title: "Express App",
-      notes: await getNotes(),
-      userEmail: req.user.email,
-      created: false,
-      error: e.message,
-    });
-  }
-});
+// app.put("/:id", async (req, res) => {
+//   try {
+//     await modifyNote(
+//       { id: req.params.id, title: req.body.title },
+//       req.user.email
+//     );
+//     res.render("index", {
+//       title: "Express App",
+//       notes: await getNotes(),
+//       userEmail: req.user.email,
+//       created: false,
+//       error: false,
+//     });
+//   } catch (e) {
+//     res.render("index", {
+//       title: "Express App",
+//       notes: await getNotes(),
+//       userEmail: req.user.email,
+//       created: false,
+//       error: e.message,
+//     });
+//   }
+// });
 
 mongoose.connect(KEY).then(() => {
   app.listen(port, () => {
