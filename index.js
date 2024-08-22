@@ -104,20 +104,18 @@ app.get("/", async (req, res) => {
 
 app.post("/", async (req, res) => {
   try {
-    await addRequest(req.body.title, req.user.email);
+    await addRequest(req.body.name, req.body.phone, req.body.description);
     res.render("index", {
-      title: "Express App",
-      //notes: await getNotes(),
-      //userEmail: req.user.email,
+      title: "Запись к врачу",
       created: true,
       error: false,
     });
   } catch (e) {
     console.error("Creation error", e);
     res.render("index", {
-      title: "Express App",
-      notes: await getNotes(),
-      userEmail: req.user.email,
+      title: "Запись к врачу",
+      // notes: await getNotes(),
+      // userEmail: req.user.email,
       created: false,
       error: true,
     });
