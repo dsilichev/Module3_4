@@ -31,7 +31,7 @@ app.use(
 
 app.get("/login", async (req, res) => {
   res.render("login", {
-    title: "Express App",
+    title: "Login",
     error: undefined,
   });
 });
@@ -40,10 +40,10 @@ app.post("/login", async (req, res) => {
   try {
     const token = await loginUser(req.body.email, req.body.password);
     res.cookie("token", token, { httpOnly: true });
-    res.redirect("/");
+    res.redirect("/requests");
   } catch (e) {
     res.render("login", {
-      title: "Express App",
+      title: "Login",
       error: e.message,
     });
   }
@@ -77,15 +77,16 @@ app.post("/register", async (req, res) => {
 
 app.get("/logout", (req, res) => {
   res.cookie("token", "", { httpOnly: true });
-  res.redirect("/login");
+  res.redirect("/");
 });
 
 app.use(auth);
 
 app.get("/requests", async (req, res) => {
+  console.log(await getRequests());
   res.render("requests", {
-    title: "Express App",
-    notes: await getRequests(),
+    title: "Заявки с формы",
+    requests: await getRequests(),
     userEmail: req.user.email,
     created: false,
     error: false,
