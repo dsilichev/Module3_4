@@ -94,9 +94,9 @@ app.get("/requests", async (req, res) => {
 
 app.get("/", async (req, res) => {
   res.render("index", {
-    title: "Express App",
+    title: "Запись к врачу",
     //notes: await getRequests(),
-    userEmail: req.user.email,
+    //userEmail: req.user.email,
     created: false,
     error: false,
   });
