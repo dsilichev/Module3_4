@@ -80,16 +80,18 @@ app.get("/logout", (req, res) => {
   res.redirect("/");
 });
 
-app.use(auth);
 
-app.get("/requests", async (req, res) => {
+
+app.get("/requests", auth, async (req, res) => {
+  
   res.render("requests", {
     title: "Заявки с формы",
     requests: await getRequests(),
-    userEmail: req.user.email,
+    //userEmail: req.user.email,
     created: false,
     error: false,
   });
+  
 });
 
 app.get("/", async (req, res) => {
