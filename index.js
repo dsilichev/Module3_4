@@ -83,7 +83,6 @@ app.get("/logout", (req, res) => {
 app.use(auth);
 
 app.get("/requests", async (req, res) => {
-  console.log(await getRequests());
   res.render("requests", {
     title: "Заявки с формы",
     requests: await getRequests(),

@@ -32,20 +32,20 @@
       <h1 class="text-center mb-3"><%= title %></h1>
 
       <% if (requests.length) { %>
-        <table class="table">
+        <table class="table table-striped table-hover">
           <thead>
             <tr>
-              <th scope="col">Дата отправки</th>
-              <th scope="col">ФИО</th>
-              <th scope="col">Телефон</th>
-              <th scope="col">Проблема</th>
+              <th width="20%" scope="col">Дата отправки</th>
+              <th width="25%" scope="col">ФИО</th>
+              <th width="20%" scope="col">Телефон</th>
+              <th width="35%"scope="col">Проблема</th>
             </tr>
           </thead>
           <tbody>
             <% for (let i=0; i < requests.length; i++) { %>
               <tr>
                 
-                <td><%= requests[i].date.toLocaleDateString("ru-RU") %></td>
+                <td><%= requests[i].date.toLocaleString("ru-RU") %></td>
                 <td><%= requests[i].name %></td>
                 <td><%= requests[i].phone %></td>
                 <td><%= requests[i].description %></td>
