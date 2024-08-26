@@ -11,7 +11,7 @@ const {
   getRequests,
 } = require("./requests-controller");
 
-const { addUser, loginUser } = require("./users-controller");
+const { loginUser } = require("./users-controller");
 
 const port = 3000;
 
@@ -49,32 +49,6 @@ app.post("/login", async (req, res) => {
   }
 });
 
-app.get("/register", async (req, res) => {
-  res.render("register", {
-    title: "Express App",
-    error: undefined,
-  });
-});
-
-app.post("/register", async (req, res) => {
-  try {
-    await addUser(req.body.email, req.body.password);
-    res.redirect("/login");
-  } catch (e) {
-    if (e.code === 11000) {
-      res.render("register", {
-        title: "Express App",
-        error: "Email is already registered",
-      });
-      return;
-    }
-    res.render("register", {
-      title: "Express App",
-      error: e.message,
-    });
-  }
-});
-
 app.get("/logout", (req, res) => {
   res.cookie("token", "", { httpOnly: true });
   res.redirect("/");
@@ -87,7 +61,6 @@ app.get("/requests", auth, async (req, res) => {
   res.render("requests", {
     title: "Заявки с формы",
     requests: await getRequests(),
-    //userEmail: req.user.email,
     created: false,
     error: false,
   });
@@ -97,8 +70,6 @@ app.get("/requests", auth, async (req, res) => {
 app.get("/", async (req, res) => {
   res.render("index", {
     title: "Запись к врачу",
-    //notes: await getRequests(),
-    //userEmail: req.user.email,
     created: false,
     error: false,
   });
@@ -116,58 +87,11 @@ app.post("/", async (req, res) => {
     console.error("Creation error", e);
     res.render("index", {
       title: "Запись к врачу",
-      // notes: await getNotes(),
-      // userEmail: req.user.email,
       created: false,
       error: true,
     });
   }
 });
-
-// app.delete("/:id", async (req, res) => {
-//   try {
-//     await removeNote(req.params.id, req.user.email);
-//     res.render("index", {
-//       title: "Express App",
-//       notes: await getNotes(),
-//       userEmail: req.user.email,
-//       created: false,
-//       error: false,
-//     });
-//   } catch (e) {
-//     res.render("index", {
-//       title: "Express App",
-//       notes: await getNotes(),
-//       userEmail: req.user.email,
-//       created: false,
-//       error: e.message,
-//     });
-//   }
-// });
-
-// app.put("/:id", async (req, res) => {
-//   try {
-//     await modifyNote(
-//       { id: req.params.id, title: req.body.title },
-//       req.user.email
-//     );
-//     res.render("index", {
-//       title: "Express App",
-//       notes: await getNotes(),
-//       userEmail: req.user.email,
-//       created: false,
-//       error: false,
-//     });
-//   } catch (e) {
-//     res.render("index", {
-//       title: "Express App",
-//       notes: await getNotes(),
-//       userEmail: req.user.email,
-//       created: false,
-//       error: e.message,
-//     });
-//   }
-// });
 
 mongoose.connect(KEY).then(() => {
   app.listen(port, () => {
